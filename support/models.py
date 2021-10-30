@@ -11,9 +11,19 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "categories"
+
 
 def generate_ticket_id():
     return str(uuid.uuid4()).split("-")[-1]
+
+
+status = (
+    ("NEW", "New"),
+    ("PENDING", "Pending"),
+    ("RESOLVED", "Resolved"),
+)
 
 
 class Ticket(models.Model):
@@ -21,7 +31,7 @@ class Ticket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    closed = models.BooleanField(default=False)
+    status = models.CharField(choices=status, max_length=155, default="New")
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     ticket_id = models.CharField(max_length=255, blank=True)
@@ -29,8 +39,8 @@ class Ticket(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        if len(self.ticket_id.strip(" ")) == 0:
+    def save(self, *args, **kwargs):  # Creating unique ticket ID
+        if len(self.ticket_id) == 0:
             self.ticket_id = generate_ticket_id()
 
         super(Ticket, self).save(*args, **kwargs)  # Call the real save()
