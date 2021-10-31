@@ -4,10 +4,10 @@ from django.contrib.auth import get_user_model
 from .models import Ticket, Category, Answer
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('url', 'username', 'email', 'is_staff')
+        fields = ('url', 'id', 'username', 'email', 'is_staff')
 
 
 class CategorySerializer(serializers.ModelSerializer):
