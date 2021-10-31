@@ -9,7 +9,7 @@ class DbTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Create user & supp
-        testuser1 = User.objects.create_user(username='testuser1', password='password')
+        testuser1 = User.objects.create_user(username='testuser', password='password')
         testuser1.save()
         supp = User.objects.create_user(username='supp1', password='pass', is_staff=True)
         supp.save()
@@ -17,18 +17,23 @@ class DbTests(TestCase):
         # Create category
         cat = Category(name='Common', slug='cmn_')
         cat.save()
+
         # Create ticket
         test_ticket = Ticket(title='Ticket', user=testuser1, content='Some content', category=cat)
         test_ticket.save()
+
         # Create Answer
         answer = Answer(content='Relax', user=supp)
+        answer.save()
 
+    def test_db_entry(self):
+        user = User.objects.get(id=1)
+        name = f'{user.username}'
+        ticket = Ticket.objects.get(id=1)
+        content = f'{ticket.content}'
+        answer = Answer.objects.get(id=1)
+        text = f'{answer.content}'
 
-    # def test_blog_content(self):
-    #     post = Post.objects.get(id=1)
-    #     author = f'{post.author}'
-    #     title = f'{post.title}'
-    #     body = f'{post.body}'
-    #     self.assertEqual(author, 'testuser1')
-    #     self.assertEqual(title, 'Blog title')
-    #     self.assertEqual(body, 'Body content...')
+        self.assertEqual(name, 'testuser')
+        self.assertEqual(content, 'Some content')
+        self.assertEqual(text, 'Relax')
