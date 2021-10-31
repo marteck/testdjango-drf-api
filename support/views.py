@@ -40,6 +40,11 @@ class AnswerViewSet(viewsets.ModelViewSet):
             self.permission_classes = (IsAuthor,)
         return super(self.__class__, self).get_permissions()
 
+    # TODO messaging view
+
+
+
+
 
 
 
