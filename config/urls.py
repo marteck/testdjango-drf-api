@@ -29,5 +29,7 @@ urlpatterns = [
     # api/auth/ password/change/ [name='rest_password_change']
     # api/auth/ token/verify/ [name='token_verify']
     # api/auth/ token/refresh/ [name='token_refresh']"""
-    path('api/auth/registration', include('dj_rest_auth.registration.urls')),
+    path('api/registration', include('dj_rest_auth.registration.urls')),
+
 ]
+

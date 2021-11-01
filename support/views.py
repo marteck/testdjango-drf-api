@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
+
 from .models import Ticket, Category, Answer
 from .serializers import UserSerializer, TicketSerializer, CategorySerializer, AnswerSerializer
 from .permissions import IsStaffUser, IsOwner, IsAuthor
@@ -39,11 +40,6 @@ class AnswerViewSet(viewsets.ModelViewSet):
         if self.action == 'retrieve':
             self.permission_classes = (IsAuthor,)
         return super(self.__class__, self).get_permissions()
-
-    # TODO messaging view
-
-
-
 
 
 
