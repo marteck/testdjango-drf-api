@@ -20,7 +20,7 @@ class IsOwner(permissions.BasePermission):  # Ticket creator or admin can PUT Ti
             return False
 
 
-class IsAuthor(permissions.BasePermission):    # The answer is only for ticket owner and only for GET
+class IsAuthor(permissions.BasePermission):  # The answer is only for ticket owner and only for GET
 
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS
@@ -33,3 +33,6 @@ class IsAuthor(permissions.BasePermission):    # The answer is only for ticket o
                 return obj.ticket_id.user == request.user
         else:
             return False
+
+
+
