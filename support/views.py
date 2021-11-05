@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Ticket, Category, Answer, generate_ticket_id
 from .serializers import UserSerializer, TicketSerializer, CategorySerializer, AnswerSerializer
 from .permissions import IsStaffUser, IsOwner, IsAuthor
+from .tasks import save_tickets
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -32,26 +33,24 @@ class TicketViewSet(viewsets.ModelViewSet):
         return super(self.__class__, self).get_permissions()
 
     def create(self, request, *args, **kwargs):
-        ticket_id = generate_ticket_id()
         all_data = request.data
         # remember old state
         _mutable = all_data._mutable
         # set to mutable
         all_data._mutable = True
         # change the value for output
-        all_data['ticket_id'] = ticket_id
+        all_data['ticket_id'] = generate_ticket_id()
         all_data['user'] = request.user.id
         # set mutable flag back
         all_data._mutable = _mutable
-        new_tic_id = request.data['ticket_id']
+        new_tic_id = all_data['ticket_id']
         super(TicketViewSet, self).create(request, *args, **kwargs)
 
-        context = f'Your ticket with unique ID {new_tic_id} will be added soon... '
+        context = f'Your ticket with ID {new_tic_id} will be added soon... '
 
         return Response({
             "Message": context
         })
-
 
 
 class AnswerViewSet(viewsets.ModelViewSet):

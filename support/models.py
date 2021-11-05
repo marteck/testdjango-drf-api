@@ -42,7 +42,6 @@ class Ticket(models.Model):
     def save(self, *args, **kwargs):  # Creating unique ticket ID
         if len(self.ticket_id) == 0:
             self.ticket_id = generate_ticket_id()
-
         super(Ticket, self).save(*args, **kwargs)  # Call the real save()
 
     class Meta:
