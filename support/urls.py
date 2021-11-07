@@ -3,7 +3,7 @@ from .views import UserViewSet, TicketViewSet, CategoryViewSet, AnswerViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
-router.register(r'tickets', TicketViewSet)
+router.register(r'tickets', TicketViewSet, basename='tickets')
 router.register(r'category', CategoryViewSet)
 router.register(r'answers', AnswerViewSet)
 

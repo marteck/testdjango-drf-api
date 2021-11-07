@@ -17,6 +17,9 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return Ticket.objects.create(**validated_data)
+
     class Meta:
         model = Ticket
         fields = '__all__'

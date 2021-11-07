@@ -1,12 +1,12 @@
 from django.contrib.auth import get_user_model
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Ticket, Category, Answer, generate_ticket_id
 from .serializers import UserSerializer, TicketSerializer, CategorySerializer, AnswerSerializer
 from .permissions import IsStaffUser, IsOwner, IsAuthor
-from .tasks import save_tickets
+from .tasks import create
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -33,6 +33,7 @@ class TicketViewSet(viewsets.ModelViewSet):
         return super(self.__class__, self).get_permissions()
 
     def create(self, request, *args, **kwargs):
+
         all_data = request.data
         # remember old state
         _mutable = all_data._mutable
@@ -44,13 +45,15 @@ class TicketViewSet(viewsets.ModelViewSet):
         # set mutable flag back
         all_data._mutable = _mutable
         new_tic_id = all_data['ticket_id']
-        super(TicketViewSet, self).create(request, *args, **kwargs)
+        username = request.user.username
 
-        context = f'Your ticket with ID {new_tic_id} will be added soon... '
-
+        serializer = TicketSerializer(data=all_data)
+        serializer.is_valid(raise_exception=True)
+        message = f'{username.capitalize()}, your ticket with ID {new_tic_id} will be added soon... '
+        create.delay(serializer.data)
         return Response({
-            "Message": context
-        })
+             "Message": message
+         })
 
 
 class AnswerViewSet(viewsets.ModelViewSet):

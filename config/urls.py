@@ -15,21 +15,28 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
+from drf_yasg import openapi
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="APITEST SCHEMA",
+        default_version="v1",
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('admin-auth/', include('rest_framework.urls')),
     path('api/v1/', include('support.urls')),
     path('api/auth/', include('dj_rest_auth.urls')),
-    # api/auth/ password/reset/ [name='rest_password_reset']
-    # api/auth/ password/reset/confirm/ [name='rest_password_reset_confirm']
-    # api/auth/ login/ [name='rest_login']
-    # api/auth/ logout/ [name='rest_logout']
-    # api/auth/ user/ [name='rest_user_details']
-    # api/auth/ password/change/ [name='rest_password_change']
-    # api/auth/ token/verify/ [name='token_verify']
-    # api/auth/ token/refresh/ [name='token_refresh']"""
     path('api/registration', include('dj_rest_auth.registration.urls')),
-
-]
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    ]
 
