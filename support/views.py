@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
@@ -50,6 +50,7 @@ class TicketViewSet(viewsets.ModelViewSet):
         serializer = TicketSerializer(data=all_data)
         serializer.is_valid(raise_exception=True)
         message = f'{username.capitalize()}, your ticket with ID {new_tic_id} will be added soon... '
+        # call delay for saving to DB
         create.delay(serializer.data)
         return Response({
              "Message": message
